@@ -8,7 +8,10 @@ class GameViewModel : ViewModel() {
     val score: Int
         get() = _score
 
-    private var currentWordCount = 0
+    private var _currentWordCount = 0
+    val currentWordCount: Int
+        get() = _currentWordCount
+
     private lateinit var _currentScrambledWord: String
     private var wordsList: MutableList<String> = mutableListOf()
     private lateinit var currentWord: String
@@ -29,7 +32,7 @@ class GameViewModel : ViewModel() {
         } else {
             // ここで再帰呼び出しの結果、初期化されるからlateinitだけどわかりづらくないのか？
             _currentScrambledWord = String(tempWord)
-            ++currentWordCount
+            ++_currentWordCount
             wordsList.add(currentWord)
         }
     }
@@ -49,9 +52,21 @@ class GameViewModel : ViewModel() {
      * Updates the next word.
      */
     fun nextWord(): Boolean {
-        return if (currentWordCount < MAX_NO_OF_WORDS) {
+        return if (_currentWordCount < MAX_NO_OF_WORDS) {
             getNextWord()
             true
         } else false
+    }
+
+    private fun increaseScore() {
+        _score += SCORE_INCREASE
+    }
+
+    fun isUserWordCorrect(playerWord: String): Boolean {
+        if (playerWord.equals(currentWord, true)) {
+            increaseScore()
+            return true
+        }
+        return false
     }
 }
