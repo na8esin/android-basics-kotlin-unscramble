@@ -25,6 +25,7 @@ class GameViewModel : ViewModel() {
     private fun getNextWord() {
         currentWord = allWordsList.random()
         val tempWord = currentWord.toCharArray()
+        Log.d("GameFragment", "Correct word: $currentWord")
         tempWord.shuffle()
 
         while (String(tempWord).equals(currentWord, false)) {
