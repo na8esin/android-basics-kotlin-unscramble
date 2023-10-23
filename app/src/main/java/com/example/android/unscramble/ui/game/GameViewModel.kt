@@ -1,6 +1,7 @@
 package com.example.android.unscramble.ui.game
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -13,12 +14,13 @@ class GameViewModel : ViewModel() {
     val currentWordCount: Int
         get() = _currentWordCount
 
+    // LiveDataだとvalにできるから、lateinitが取れはする
     private val _currentScrambledWord = MutableLiveData<String>()
+    val currentScrambledWord: LiveData<String>
+        get() = _currentScrambledWord
+
     private var wordsList: MutableList<String> = mutableListOf()
     private lateinit var currentWord: String
-
-    val currentScrambledWord: String
-        get() = _currentScrambledWord
 
     private fun getNextWord() {
         currentWord = allWordsList.random()
@@ -31,8 +33,7 @@ class GameViewModel : ViewModel() {
         if (wordsList.contains(currentWord)) {
             getNextWord()
         } else {
-            // ここで再帰呼び出しの結果、初期化されるからlateinitだけどわかりづらくないのか？
-            _currentScrambledWord = String(tempWord)
+            _currentScrambledWord.value = String(tempWord)
             ++_currentWordCount
             wordsList.add(currentWord)
         }
